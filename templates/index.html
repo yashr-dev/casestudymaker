@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiChefs Case Study Maker</title>
+    <meta name="description"
+        content="Generate professional, Deep-style case studies for DigiChefs with AI-powered content and Google Slides output.">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-row">
+                <div class="logo-icon">🍳</div>
+                <h1>Case Study Maker</h1>
+            </div>
+            <p>Transform basic project details or rough Google Drive notes into proof-led business stories, written
+                natively by Deep Mehta.</p>
+        </header>
+
+        <form id="caseStudyForm" autocomplete="off">
+
+            <!-- 0. Quick Start: Drive Link -->
+            <div class="form-section highlight-section"
+                style="background: rgba(255, 165, 0, 0.05); border: 1px solid var(--primary);">
+                <div class="section-header">
+                    <div class="section-icon">🔗</div>
+                    <div>
+                        <h2>Quick Start: Drop a Link</h2>
+                        <div class="section-subtitle">Have a rough draft or notes? Paste the Google Doc link here. Deep
+                            will read it directly.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="driveLink">Google Doc Link <span class="optional">(Make sure "Anyone with link can view"
+                            is ON)</span></label>
+                    <input type="text" id="driveLink" name="drive_link"
+                        placeholder="e.g. https://docs.google.com/document/d/...">
+                </div>
+                <p style="font-size: 0.85rem; color: #666; margin-top: 10px;">* If you provide a link above, the fields
+                    below become optional.</p>
+            </div>
+
+            <!-- 1. Brand Info -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">🏢</div>
+                    <div>
+                        <h2>Brand & Project Info</h2>
+                        <div class="section-subtitle">Who's the client and what services did we provide?</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brandName" class="dynamic-req-label">Brand Name </label>
+                        <input type="text" id="brandName" name="brand_name" placeholder="e.g. Jio Tessarct">
+                    </div>
+                    <div class="form-group">
+                        <label for="industry">Industry</label>
+                        <select id="industry" name="industry">
+                            <option value="">Select industry...</option>
+                            <option value="E-commerce">E-commerce</option>
+                            <option value="SaaS / Tech">SaaS / Tech</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Education">Education</option>
+                            <option value="Finance / Fintech">Finance / Fintech</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Food & Beverage">Food & Beverage</option>
+                            <option value="Fashion & Lifestyle">Fashion & Lifestyle</option>
+                            <option value="FMCG">FMCG</option>
+                            <option value="B2B Services">B2B Services</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Hospitality & Travel">Hospitality & Travel</option>
+                            <option value="Automotive">Automotive</option>
+                            <option value="Retail">Retail</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="websiteUrl">Brand Website URL <span class="optional">(AI will research the brand from
+                            this)</span></label>
+                    <input type="text" id="websiteUrl" name="website_url" placeholder="e.g. https://www.sandwizzaa.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Services Used</label>
+                    <div class="services-grid">
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcSEO" value="SEO">
+                            <label for="svcSEO">🔍 SEO</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcPerformance" value="Performance Marketing">
+                            <label for="svcPerformance">📈 Performance Marketing</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcSocial" value="Social Media">
+                            <label for="svcSocial">📱 Social Media</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcCreative" value="Creative">
+                            <label for="svcCreative">🎨 Creative</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcContent" value="Content Strategy">
+                            <label for="svcContent">✍️ Content Strategy</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcWeb" value="Web Development">
+                            <label for="svcWeb">💻 Web Development</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcBranding" value="Branding">
+                            <label for="svcBranding">✨ Branding</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcInfluencer" value="Influencer Marketing">
+                            <label for="svcInfluencer">🤝 Influencer Marketing</label>
+                        </div>
+                        <div class="service-tag">
+                            <input type="checkbox" id="svcEmail" value="Email Marketing">
+                            <label for="svcEmail">📧 Email Marketing</label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 12px;">
+                        <input type="text" id="servicesOther" placeholder="Or type services manually (comma-separated)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. What We Did -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <div>
+                        <h2>What Did We Do?</h2>
+                        <div class="section-subtitle">Describe the project in simple terms — the AI will polish it</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatWeDid" class="dynamic-req-label">Project Description </label>
+                    <textarea id="whatWeDid" name="what_we_did"
+                        placeholder="e.g. Managed their social media for a product launch campaign. Created content calendar, produced 30+ pieces of content, ran paid promotions across Instagram and YouTube..."></textarea>
+                </div>
+            </div>
+
+            <!-- 3. How We Did It -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">⚙️</div>
+                    <div>
+                        <h2>How Did We Do It?</h2>
+                        <div class="section-subtitle">The approach, strategy, tools — even rough notes work</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="howWeDidIt">Approach & Methodology</label>
+                    <textarea id="howWeDidIt" name="how_we_did_it"
+                        placeholder="e.g. Started with competitor analysis of 5 brands. Identified gap in their content — no video content while competitors were getting 3x engagement on reels. Built a content calendar focused on educational + entertainment mix. Set up Meta Ads with lookalike audiences from their existing customer list..."></textarea>
+                </div>
+            </div>
+
+            <!-- 4. Impact & Results -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">📊</div>
+                    <div>
+                        <h2>Impact & Results</h2>
+                        <div class="section-subtitle">Numbers tell the story — write down your KPIs</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="impact" class="dynamic-req-label">Impact & Results </label>
+                    <textarea id="impact" name="impact" class="small-area"
+                        placeholder="e.g. 34k Video Views in 3 months. 3x engagement on reels. 2.5k shares. ROI of 400%..."></textarea>
+                </div>
+            </div>
+
+            <!-- 5. Additional Context & Media -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">💡</div>
+                    <div>
+                        <h2>Extra Context & Media</h2>
+                        <div class="section-subtitle">Anything else the AI should know, plus links to creative assets
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="mediaLink">Media Assets Link <span class="optional">(Google Drive /
+                            Dropbox)</span></label>
+                    <input type="text" id="mediaLink" name="media_link"
+                        placeholder="e.g. https://drive.google.com/drive/folders/...">
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalContext">Testimonials, Tools, Background <span
+                            class="optional">(optional)</span></label>
+                    <textarea id="additionalContext" name="additional_context" class="small-area"
+                        placeholder="e.g. Client testimonial: 'DigiChefs understood our brand voice from day one...'&#10;Tools: Meta Ads Manager, Google Analytics, Canva, Notion&#10;Background: Brand was 2 years old, bootstrapped, first time working with an agency"></textarea>
+                </div>
+            </div>
+
+            <!-- API Key (collapsible) -->
+            <div class="api-key-section" id="apiKeySection">
+                <div class="collapsible-header">
+                    <h3>🔑 API Configuration</h3>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="api-key-content">
+                    <div class="form-group">
+                        <label for="geminiApiKey">Gemini API Key <span class="optional">(or set GEMINI_API_KEY in
+                                .env)</span></label>
+                        <input type="text" id="geminiApiKey" placeholder="AIza...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate Buttons -->
+            <div class="generate-btn-wrapper" style="display: flex; gap: 1rem; justify-content: center;">
+                <button type="button" class="generate-btn outline-btn" id="clarifyBtn">
+                    <span class="btn-icon">🤔</span>
+                    <span class="btn-text">Ask AI for Suggestions</span>
+                    <span class="btn-spinner" style="display: none;">⏳</span>
+                </button>
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    <span class="btn-icon">✨</span>
+                    <span class="btn-text">Generate Case Study</span>
+                    <span class="btn-spinner">⏳</span>
+                </button>
+            </div>
+
+            <!-- Clarification Section (Hidden initially) -->
+            <div class="clarification-section" id="clarificationSection"
+                style="display: none; margin-top: 2rem; background: rgba(255,165,0,0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                    <span style="font-size: 2rem;">👨‍💼</span>
+                    <h3 style="color: var(--primary); margin: 0;">Deep Mehta: "I need more context to make this elite."
+                    </h3>
+                </div>
+                <div id="clarificationQuestions" style="margin-bottom: 1.5rem; line-height: 1.6;"></div>
+                <div class="form-group">
+                    <label for="clarificationAnswers" style="color: var(--text); font-weight: 500;">Your
+                        Answers:</label>
+                    <textarea id="clarificationAnswers" class="small-area"
+                        placeholder="Answer his questions here so he can finalize the strategy..."></textarea>
+                </div>
+                <button type="button" class="generate-btn" id="applyClarificationsBtn"
+                    style="width: 100%; margin-top: 10px;">
+                    <span class="btn-text">Submit Answers & Generate Case Study</span>
+                    <span class="btn-spinner" style="display: none;">⏳ Generating...</span>
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Progress -->
+        <div class="progress-section" id="progressSection">
+            <div class="progress-steps">
+                <div class="progress-step" data-step="1">
+                    <span class="step-dot"></span>
+                    <span>AI Writing</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="progress-step" data-step="2">
+                    <span class="step-dot"></span>
+                    <span>Building Slides</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="progress-step" data-step="3">
+                    <span class="step-dot"></span>
+                    <span>Done!</span>
+                </div>
+            </div>
+            <p class="progress-message">Initializing...</p>
+        </div>
+
+        <!-- Result -->
+        <div class="result-section" id="resultSection"></div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built for <a href="https://digichefs.com" target="_blank">DigiChefs</a> · Powered by Gemini AI</p>
+        </footer>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
