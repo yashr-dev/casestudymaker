@@ -6,7 +6,85 @@ document.addEventListener('DOMContentLoaded', () => {
     initFormHandlers();
     initAPIKeyToggle();
     initClarifyHandlers();
+    initAutoSave();
 });
+
+function initAutoSave() {
+    // Load previously saved data when page loads
+    loadFormData();
+
+    // Attach listener to all text inputs and textareas
+    const inputs = document.querySelectorAll('#caseStudyForm input[type="text"], #caseStudyForm input[type="url"], #caseStudyForm textarea');
+    inputs.forEach(input => {
+        input.addEventListener('input', saveFormData);
+    });
+
+    // Also attach to checkboxes
+    const checkboxes = document.querySelectorAll('#caseStudyForm input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', saveFormData);
+    });
+}
+
+function saveFormData() {
+    const formData = {
+        brandName: document.getElementById('brandName')?.value || '',
+        industry: document.getElementById('industry')?.value || '',
+        whatWeDid: document.getElementById('whatWeDid')?.value || '',
+        howWeDidIt: document.getElementById('howWeDidIt')?.value || '',
+        impact: document.getElementById('impact')?.value || '',
+        mediaLink: document.getElementById('mediaLink')?.value || '',
+        driveLink: document.getElementById('driveLink')?.value || '',
+        additionalContext: document.getElementById('additionalContext')?.value || '',
+        websiteUrl: document.getElementById('websiteUrl')?.value || '',
+
+        // Save checkbox states separately
+        services: Array.from(document.querySelectorAll('.service-tag input[type="checkbox"]'))
+            .filter(cb => cb.checked)
+            .map(cb => cb.value),
+        servicesOther: document.getElementById('servicesOther')?.value || ''
+    };
+
+    // Also save API key if entered
+    const apiKey = document.getElementById('geminiApiKey');
+    if (apiKey && apiKey.value) {
+        formData.geminiApiKey = apiKey.value;
+    }
+
+    localStorage.setItem('caseStudyDraft', JSON.stringify(formData));
+}
+
+function loadFormData() {
+    const draft = localStorage.getItem('caseStudyDraft');
+    if (draft) {
+        try {
+            const formData = JSON.parse(draft);
+
+            // Restore text inputs
+            const textFields = ['brandName', 'industry', 'whatWeDid', 'howWeDidIt', 'impact',
+                'mediaLink', 'driveLink', 'additionalContext', 'websiteUrl',
+                'servicesOther', 'geminiApiKey'];
+
+            textFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && formData[id]) {
+                    el.value = formData[id];
+                }
+            });
+
+            // Restore checkboxes
+            if (formData.services && Array.isArray(formData.services)) {
+                const checkboxes = document.querySelectorAll('.service-tag input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    cb.checked = formData.services.includes(cb.value);
+                });
+            }
+
+        } catch (e) {
+            console.error('Error loading drafted form data:', e);
+        }
+    }
+}
 
 function initClarifyHandlers() {
     const clarifyBtn = document.getElementById('clarifyBtn');

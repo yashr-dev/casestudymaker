@@ -15,31 +15,63 @@ SCOPES = [
     'https://www.googleapis.com/auth/drive'
 ]
 
-TOKEN_FILE = 'token.json'
-CREDENTIALS_FILE = 'credentials.json'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TOKEN_FILE = os.path.join(BASE_DIR, 'token.json')
+CREDENTIALS_FILE = os.path.join(BASE_DIR, 'credentials.json')
 
 
 def get_google_credentials():
     """Get or refresh Google API credentials."""
     creds = None
     
-    if os.path.exists(TOKEN_FILE):
+    # 1. Try to load token from environment variables first (Base64 encoded)
+    import base64
+    env_token_b64 = os.environ.get('GOOGLE_TOKEN_B64')
+    if env_token_b64:
+        try:
+            token_info = json.loads(base64.b64decode(env_token_b64).decode('utf-8'))
+            creds = Credentials.from_authorized_user_info(token_info, SCOPES)
+        except Exception as e:
+            print(f"Failed to load GOOGLE_TOKEN_B64: {e}")
+            
+    # 2. Fallback to token.json file
+    if not creds and os.path.exists(TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
     
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            if not os.path.exists(CREDENTIALS_FILE):
-                raise FileNotFoundError(
-                    f"'{CREDENTIALS_FILE}' not found. Download OAuth 2.0 Client ID credentials "
-                    "from Google Cloud Console and save as 'credentials.json'."
-                )
-            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
-            creds = flow.run_local_server(port=8090)
+            # 3. If no valid token, we need credentials to generate one
+            env_creds_b64 = os.environ.get('GOOGLE_CREDENTIALS_B64')
+            if env_creds_b64:
+                try:
+                    import tempfile
+                    creds_info = base64.b64decode(env_creds_b64).decode('utf-8')
+                    with tempfile.NamedTemporaryFile('w', delete=False) as f:
+                        f.write(creds_info)
+                        temp_creds_file = f.name
+                    flow = InstalledAppFlow.from_client_secrets_file(temp_creds_file, SCOPES)
+                    os.unlink(temp_creds_file)
+                    creds = flow.run_local_server(port=8090)
+                except Exception as e:
+                    print(f"Failed to use GOOGLE_CREDENTIALS_B64: {e}")
+            
+            if not creds:
+                if not os.path.exists(CREDENTIALS_FILE):
+                    raise FileNotFoundError(
+                        f"'{CREDENTIALS_FILE}' not found. Download OAuth 2.0 Client ID credentials "
+                        "from Google Cloud Console locally and run the app to generate a token."
+                    )
+                flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
+                creds = flow.run_local_server(port=8090)
         
-        with open(TOKEN_FILE, 'w') as token:
-            token.write(creds.to_json())
+        # Save token for next time (locally)
+        try:
+            with open(TOKEN_FILE, 'w') as token:
+                token.write(creds.to_json())
+        except Exception as e:
+            print(f"Warning: Could not save token.json: {e}")
     
     return creds
 
